@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webcam Stream</title>
+    <script>
+      function requestCameraPermission() {
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then(function (stream) {
+            document.getElementById("webcam-stream").srcObject = stream;
+          })
+          .catch(function (error) {
+            console.error("Error accessing the camera:", error);
+          });
+      }
+
+      function startStream() {
+        document.getElementById("webcam-stream").src =
+          "{% url 'webcam_feed' %}";
+      }
+
+      function stopStream() {
+        document.getElementById("webcam-stream").src = "";
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Webcam Stream with Age and Gender Detection</h1>
+    <img id="webcam-stream" alt="Webcam Stream" height="300" width="300" />
+    <br />
+    <button onclick="startStream()">Start Stream</button>
+    <button onclick="stopStream()">Stop Stream</button>
+    <button onclick="requestCameraPermission()">Grant Camera Access</button>
+  </body>
+</html>
