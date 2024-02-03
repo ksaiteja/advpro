@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import index, webcam_feed
+from webcam_app.views import webcam_feed,index,advertisement
 
 urlpatterns = [
     path('', index, name='index'),
     path('webcam_feed/', webcam_feed, name='webcam_feed'),
+    path('advertisement/', advertisement, name='advertisement'),
 ]

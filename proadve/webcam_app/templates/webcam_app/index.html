@@ -1,37 +1,76 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Webcam Stream</title>
+    <style>
+      body {
+        font-family: vendeta;
+        background-color: #252525; /* Light black background color */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; /* Make the body take the full viewport height */
+        flex-direction: column; /* Arrange children in a column */
+      }
+
+      h1 {
+        color: white;
+      }
+
+      .row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 20px; /* Adjust the margin based on your preference */
+        gap: 10px;
+      }
+
+      .web_stream,
+      .advertisement {
+        border-radius: 10px;
+        display: flex;
+        height: 80vh;
+        width: 80vh;
+        overflow: hidden;
+        color: white; /* Adjust text color based on your preference */
+      }
+
+      .web_stream img,
+      .advertisement img {
+        width: 100%; /* Make the image fill its container */
+        height: 100%;
+        object-fit: cover; /* Maintain aspect ratio while covering the container */
+      }
+    </style>
+    {% comment %}
     <script>
-      function requestCameraPermission() {
-        navigator.mediaDevices
-          .getUserMedia({ video: true })
-          .then(function (stream) {
-            document.getElementById("webcam-stream").srcObject = stream;
-          })
-          .catch(function (error) {
-            console.error("Error accessing the camera:", error);
-          });
-      }
+      const advertisementSocket = new WebSocket(
+        "ws://" + window.location.host + "/ws/advertisement/"
+      );
 
-      function startStream() {
-        document.getElementById("webcam-stream").src =
-          "{% url 'webcam_feed' %}";
-      }
-
-      function stopStream() {
-        document.getElementById("webcam-stream").src = "";
-      }
+      advertisementSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        document.querySelector(".advertisement img").src =
+          data.advertisement_path;
+      };
     </script>
+    {% endcomment %}
   </head>
   <body>
-    <h1>Webcam Stream with Age and Gender Detection</h1>
-    <img id="webcam-stream" alt="Webcam Stream" height="300" width="300" />
-    <br />
-    <button onclick="startStream()">Start Stream</button>
-    <button onclick="stopStream()">Stop Stream</button>
-    <button onclick="requestCameraPermission()">Grant Camera Access</button>
+    <h1>AdvPro</h1>
+    <div class="row">
+      <div class="web_stream">
+        <img src="{% url 'webcam_feed' %}" alt="Webcam Stream" />
+      </div>
+      <div class="advertisement">
+        <img src="{% url 'advertisement' %}" alt="advertisement" />
+      </div>
+    </div>
   </body>
 </html>
